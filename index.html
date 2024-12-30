@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple QR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <link rel="icon" href="favicon.png" type="image/png">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 300px;
+            border: 1px solid #000000;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus {
+            border-color: #24b300;
+            outline: none;
+        }
+        button, select {
+            padding: 10px 20px;
+            background-color: #040404;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 5px;
+        }
+        button:hover, select:hover {
+            background-color: #4a4a4a;
+        }
+        #qrcode {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #040404;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        /* Animation styles */
+        @keyframes buttonClick {
+            0% {
+                transform: scale(1);
+                background-color: #040404;
+            }
+            50% {
+                transform: scale(1.2);
+                background-color: #24b300;
+            }
+            100% {
+                transform: scale(1);
+                background-color: #040404;
+            }
+        }
+        .animate-button {
+            animation: buttonClick 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simple QR Code Generator</h1>
+        <input type="text" id="userInput" placeholder="Enter text or URL" />
+        <button id="generate">Generate QR Code</button>
+        <div id="qrcode"></div>
+        
+        <select id="format" style="display:none;">
+            <option value="png">PNG</option>
+            <option value="jpeg">JPEG</option>
+        </select>
+        
+        <button id="download" style="display:none;">Download QR Code</button>
+    </div>
+
+    <script>
+        var qr;
+
+        $(document).ready(function() {
+            $('#generate').click(function() {
+                var input = $('#userInput').val();
+                $('#qrcode').empty(); // Clear previous QR code
+                $('#download').hide(); // Hide download button initially
+                $('#format').hide(); // Hide format selection initially
+                if (input) {
+                    qr = new QRious({
+                        element: document.createElement('canvas'),
+                        value: input,
+                        size: 200
+                    });
+                    $('#qrcode').append(qr.canvas); // Append the canvas to the QR code div
+                    $('#download').show(); // Show download button
+                    $('#format').show(); // Show format selection
+                } else {
+                    alert('Please enter a value to generate a QR code.');
+                }
+            });
+
+            $('#download').click(function() {
+                var format = $('#format').val();
+                if (format === 'png' || format === 'jpeg') {
+                    var image = qr.canvas.toDataURL(format === 'png' ? 'image/png' : 'image/jpeg'); // Convert to PNG or JPEG
+                    var link = document.createElement('a');
+                    link.href = image;
+                    link.download = 'qrcode.' + format; // Set the download filename
+                    link.click(); // Trigger the download
+
+                    // Trigger the animation
+                    $(this).addClass('animate-button');
+                    setTimeout(() => {
+                        $(this).removeClass('animate-button');
+                    }, 300);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
