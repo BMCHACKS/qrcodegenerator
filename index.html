@@ -103,18 +103,18 @@
         $(document).ready(function() {
             $('#generate').click(function() {
                 var input = $('#userInput').val();
-                $('#qrcode').empty(); // Clear previous QR code
-                $('#download').hide(); // Hide download button initially
-                $('#format').hide(); // Hide format selection initially
+                $('#qrcode').empty(); 
+                $('#download').hide(); 
+                $('#format').hide();
                 if (input) {
                     qr = new QRious({
                         element: document.createElement('canvas'),
                         value: input,
                         size: 200
                     });
-                    $('#qrcode').append(qr.canvas); // Append the canvas to the QR code div
-                    $('#download').show(); // Show download button
-                    $('#format').show(); // Show format selection
+                    $('#qrcode').append(qr.canvas); 
+                    $('#download').show(); 
+                    $('#format').show(); 
                 } else {
                     alert('Please enter a value to generate a QR code.');
                 }
@@ -123,13 +123,13 @@
             $('#download').click(function() {
                 var format = $('#format').val();
                 if (format === 'png' || format === 'jpeg') {
-                    var image = qr.canvas.toDataURL(format === 'png' ? 'image/png' : 'image/jpeg'); // Convert to PNG or JPEG
+                    var image = qr.canvas.toDataURL(format === 'png' ? 'image/png' : 'image/jpeg');
                     var link = document.createElement('a');
                     link.href = image;
                     link.download = 'qrcode.' + format; // Set the download filename
                     link.click(); // Trigger the download
 
-                    // Trigger the animation
+                   
                     $(this).addClass('animate-button');
                     setTimeout(() => {
                         $(this).removeClass('animate-button');
@@ -140,3 +140,4 @@
     </script>
 </body>
 </html>
+
